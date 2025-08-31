@@ -29,8 +29,39 @@ export function Navbar() {
 export function Footer() {
   return (
     <footer className="border-t mt-10">
-      <div className="container mx-auto py-6 px-4 text-xs text-muted-foreground">
-        © {new Date().getFullYear()} PlayGym Hub
+      <div className="container mx-auto px-4 py-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div>
+            <div className="font-bold">PlayGym Hub</div>
+            <p className="mt-2 text-sm text-muted-foreground">Game harder. Train smarter. Flexible plans with instant M-Pesa payments.</p>
+          </div>
+          <div>
+            <div className="text-sm font-semibold">Links</div>
+            <ul className="mt-2 space-y-2 text-sm">
+              <li><Link to="/" className="text-muted-foreground hover:underline">Home</Link></li>
+              <li><Link to="/subscriptions" className="text-muted-foreground hover:underline">Subscriptions</Link></li>
+              <li><Link to="/dashboard" className="text-muted-foreground hover:underline">Dashboard</Link></li>
+              <li><Link to="/settings" className="text-muted-foreground hover:underline">Settings</Link></li>
+            </ul>
+          </div>
+          <div>
+            <div className="text-sm font-semibold">Contact</div>
+            <ul className="mt-2 space-y-2 text-sm text-muted-foreground">
+              <li>Email: hello@playgymhub.example</li>
+              <li>Phone: +254 795 188 610</li>
+              <li>Location: Meru, Kenya</li>
+            </ul>
+          </div>
+          <div>
+            <div className="text-sm font-semibold">Follow</div>
+            <div className="mt-2 flex gap-3 text-sm text-muted-foreground">
+              <a href="#" aria-label="Twitter" className="hover:underline">Twitter</a>
+              <a href="#" aria-label="Instagram" className="hover:underline">Instagram</a>
+              <a href="#" aria-label="Facebook" className="hover:underline">Facebook</a>
+            </div>
+          </div>
+        </div>
+        <div className="mt-10 text-xs text-muted-foreground">© {new Date().getFullYear()} PlayGym Hub. All rights reserved.</div>
       </div>
     </footer>
   )

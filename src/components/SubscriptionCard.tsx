@@ -14,11 +14,15 @@ function CategoryIcon({ category }: { category: string }) {
 function categoryBadgeClass(category: string) {
   switch (category) {
     case 'gaming':
-      return 'bg-gaming-playstation/15 text-gaming-playstation border-gaming-playstation/30'
+      return 'bg-purple-100 text-purple-800 border-purple-200'
     case 'gym':
-      return 'bg-fitness-energy/15 text-fitness-energy border-fitness-energy/30'
+      return 'bg-green-100 text-green-800 border-green-200'
+    case 'movies':
+      return 'bg-blue-100 text-blue-800 border-blue-200'
+    case 'sports':
+      return 'bg-orange-100 text-orange-800 border-orange-200'
     default:
-      return 'bg-muted text-muted-foreground border-muted'
+      return 'bg-gray-100 text-gray-800 border-gray-200'
   }
 }
 
@@ -30,7 +34,7 @@ export default function SubscriptionCard({ plan }: { plan: Plan }) {
     : 'Flexible'
 
   return (
-    <div className="rounded-xl border bg-card p-4 shadow-card hover:shadow-glow transition-shadow">
+    <div className="rounded-xl border bg-card p-4 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between">
         <span className={`inline-flex items-center gap-2 text-xs uppercase tracking-wide px-2 py-1 rounded-md border ${categoryBadgeClass(plan.category)}`}>
           <CategoryIcon category={plan.category} />
@@ -44,18 +48,16 @@ export default function SubscriptionCard({ plan }: { plan: Plan }) {
       </div>
       <div className="mt-4 flex items-end justify-between">
         <div>
-          <div className="text-xs text-muted-foreground">From</div>
+          <div className="text-xs text-muted-foreground">Price</div>
           <div className="text-2xl font-bold">KES {plan.amount.toLocaleString()}</div>
         </div>
         <Link
           to={`/payment?plan=${encodeURIComponent(plan.plan)}&category=${encodeURIComponent(plan.category)}&amount=${plan.amount}`}
-          className="px-3 py-2 rounded-md bg-primary text-primary-foreground text-sm"
+          className="px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
         >
-          Choose
+          Subscribe
         </Link>
       </div>
     </div>
   )
 }
-
-
