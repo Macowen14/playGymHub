@@ -21,8 +21,8 @@ export default function Subscriptions() {
     error, 
     refetch,
     isRefetching,
-    status, // Add status for debugging
-    fetchStatus // Add fetchStatus for debugging
+    status,
+    fetchStatus
   } = useQuery<Plan[], Error>({ 
     queryKey: ['plans'], 
     queryFn: fetchPlans,
@@ -30,9 +30,9 @@ export default function Subscriptions() {
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
-    refetchOnWindowFocus: true, // Changed to true for debugging
-    refetchOnMount: true, // Ensure it refetches on mount
-    enabled: true, // Explicitly enable the query
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    enabled: true,
   });
 
   // Debug: Log query state changes
@@ -134,8 +134,8 @@ export default function Subscriptions() {
                 <div className="mt-4 p-3 bg-gray-100 rounded-md">
                   <h4 className="text-xs font-medium text-gray-700 mb-2">Debug Information:</h4>
                   <div className="text-xs text-gray-600 space-y-1">
-                    <p><strong>API URL:</strong> {process.env.REACT_APP_API_URL || 'https://gamehub-i770.onrender.com'}</p>
-                    <p><strong>Environment:</strong> {process.env.NODE_ENV || 'development'}</p>
+                    <p><strong>API URL:</strong> {import.meta.env.VITE_API_URL || 'https://gamehub-i770.onrender.com'}</p>
+                    <p><strong>Environment:</strong> {import.meta.env.MODE || 'development'}</p>
                     <p><strong>Error Type:</strong> {error?.constructor?.name || 'Unknown'}</p>
                     <p><strong>Timestamp:</strong> {new Date().toISOString()}</p>
                     {error.stack && (
@@ -226,7 +226,7 @@ export default function Subscriptions() {
         ))}
       </div>
       
-      {process.env.NODE_ENV === 'development' && (
+      {import.meta.env.MODE === 'development' && (
         <div className="mt-8 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
           <details>
             <summary className="text-sm font-medium text-yellow-800 cursor-pointer">
@@ -234,7 +234,7 @@ export default function Subscriptions() {
             </summary>
             <div className="mt-2 text-xs text-yellow-700">
               <p><strong>Plans loaded:</strong> {plans.length}</p>
-              <p><strong>API URL:</strong> {process.env.REACT_APP_API_URL || 'https://gamehub-i770.onrender.com'}</p>
+              <p><strong>API URL:</strong> {import.meta.env.VITE_API_URL || 'https://gamehub-i770.onrender.com'}</p>
               <p><strong>Last updated:</strong> {new Date().toLocaleTimeString()}</p>
               <p><strong>Query status:</strong> {status}</p>
               <p><strong>Fetch status:</strong> {fetchStatus}</p>

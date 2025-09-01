@@ -1,3 +1,4 @@
+// api.ts
 export type Plan = {
   _id?: string;
   category: 'gaming' | 'gym' | 'movies' | 'sports' | string;
@@ -27,6 +28,7 @@ export type Subscription = {
   updatedAt: string;
 }
 
+// Add the missing PaymentResponse type
 export type PaymentResponse = {
   success: boolean;
   message: string;
@@ -44,13 +46,14 @@ export type PaymentResponse = {
 }
 
 // Get API URL with fallback and validation
-function getApiUrl(): string {
-  const apiUrl =  'https://gamehub-i770.onrender.com';
+export function getApiUrl(): string {
+  // Use Vite's import.meta.env instead of process.env for browser environments
+  const apiUrl = import.meta.env.VITE_API_URL || 'https://gamehub-i770.onrender.com';
   console.log('Using API URL:', apiUrl);
   return apiUrl;
 }
 
-async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit = {}, timeoutMs = 30000): Promise<Response> {
+export async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit = {}, timeoutMs = 30000): Promise<Response> {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeoutMs);
   
@@ -64,8 +67,6 @@ async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit = {}
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        // Add CORS headers if needed
-        'Access-Control-Allow-Origin': '*',
         ...init.headers,
       }
     });
@@ -85,7 +86,7 @@ async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit = {}
   }
 }
 
-async function parseJsonSafe<T>(res: Response): Promise<T> {
+export async function parseJsonSafe<T>(res: Response): Promise<T> {
   const text = await res.text();
   console.log('Raw response text:', text);
   
@@ -120,12 +121,9 @@ export async function fetchPlans(): Promise<Plan[]> {
       method: 'GET',
       headers: { 
         'Accept': 'application/json',
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache'
       },
-      // Disable cache completely
       cache: 'no-store'
-    }, 30000); // Increased timeout to 30 seconds
+    }, 30000);
     
     console.log('Response status:', res.status, res.statusText);
     console.log('Response headers:', Object.fromEntries(res.headers.entries()));
@@ -198,72 +196,6 @@ export async function fetchPlans(): Promise<Plan[]> {
     }
     
     console.error('Throwing friendly error:', friendlyMessage);
-    throw new Error(friendlyMessage);
-  }
-}
-
-export async function initiatePayment(planName: string, category: string, phone: string): Promise<PaymentResponse> {
-  try {
-    const API_URL = getApiUrl();
-    const token = localStorage.getItem('authToken');
-    
-    console.log('=== INITIATING PAYMENT ===');
-    console.log('Plan:', planName, 'Category:', category, 'Phone:', phone);
-    console.log('Auth token present:', !!token);
-    
-    const res = await fetchWithTimeout(`${API_URL}/api/subscriptions/subscribe`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-      },
-      body: JSON.stringify({ plan: planName, category, phone })
-    });
-    
-    if (!res.ok) {
-      const errorData = await parseJsonSafe<{ error: string; message?: string }>(res);
-      const errorMessage = errorData.error || errorData.message || `Payment failed (${res.status})`;
-      throw new Error(errorMessage);
-    }
-    
-    return await parseJsonSafe<PaymentResponse>(res);
-  } catch (err: unknown) {
-    console.error('Payment initiation error:', err);
-    const error = err as { message?: string; name?: string } | undefined;
-    const friendlyMessage = error?.name === 'AbortError'
-      ? 'Payment request timed out'
-      : (error?.message || 'Unknown error during payment');
-    throw new Error(friendlyMessage);
-  }
-}
-
-export async function checkPaymentStatus(subscriptionId: string): Promise<{ status: string, receiptNumber: string | null }> {
-  try {
-    const API_URL = getApiUrl();
-    const token = localStorage.getItem('authToken');
-    
-    console.log('Checking payment status for subscription:', subscriptionId);
-    
-    const res = await fetchWithTimeout(`${API_URL}/api/subscriptions/${subscriptionId}/status`, {
-      headers: {
-        'Accept': 'application/json',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-      }
-    });
-    
-    if (!res.ok) {
-      throw new Error(`Status check failed (${res.status})`);
-    }
-    
-    const data = await parseJsonSafe<{ success: boolean, data: { status: string, receiptNumber: string | null } }>(res);
-    return data.data;
-  } catch (err: unknown) {
-    console.error('Payment status check error:', err);
-    const error = err as { message?: string; name?: string } | undefined;
-    const friendlyMessage = error?.name === 'AbortError'
-      ? 'Status check timed out'
-      : (error?.message || 'Unknown error during status check');
     throw new Error(friendlyMessage);
   }
 }

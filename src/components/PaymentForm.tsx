@@ -1,7 +1,9 @@
+// PaymentForm.tsx
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { initiatePayment, checkPaymentStatus } from '../utils/api';
 import { AlertCircle, CheckCircle, Clock, Smartphone } from 'lucide-react';
+import { useApi } from '../utils/useApi';
+import { useAuth } from '@clerk/clerk-react';
 
 export default function PaymentForm() {
   const [searchParams] = useSearchParams();
@@ -32,6 +34,9 @@ export default function PaymentForm() {
 
   // Validate required parameters
   const hasRequiredParams = planName && category && amount;
+
+  const { initiatePayment, checkPaymentStatus } = useApi();
+  const { isLoaded, userId } = useAuth();
 
   useEffect(() => {
     if (!hasRequiredParams) {
@@ -91,7 +96,7 @@ export default function PaymentForm() {
         clearInterval(interval);
       };
     }
-  }, [subscriptionId, status.type, pollCount]);
+  }, [subscriptionId, status.type, pollCount, checkPaymentStatus]);
 
   const formatPhoneNumber = (phone: string): string => {
     // Remove any spaces, dashes, or special characters
@@ -130,6 +135,11 @@ export default function PaymentForm() {
     
     if (!hasRequiredParams) {
       setStatus({ type: 'error', message: 'Missing plan information. Please go back and select a plan.' });
+      return;
+    }
+
+    if (!isLoaded || !userId) {
+      setStatus({ type: 'error', message: 'Please sign in to make a payment' });
       return;
     }
 
@@ -268,7 +278,7 @@ export default function PaymentForm() {
 
         <button
           type="submit"
-          disabled={isProcessing || !phone.trim() || !validatePhoneNumber(phone)}
+          disabled={isProcessing || !phone.trim() || !validatePhoneNumber(phone) || !isLoaded || !userId}
           className="w-full py-3 px-4 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
         >
           {isProcessing ? (

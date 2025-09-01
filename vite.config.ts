@@ -7,10 +7,6 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true,
-    // Remove the old proxy configuration and use proper middleware
-    proxy: {
-      // Remove the old proxy setup
-    },
   },
   // configureServer is not a valid option in Vite - use the configureServer function inside the plugin
 })

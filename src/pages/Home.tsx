@@ -31,8 +31,8 @@ export default function Home() {
       </section>
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <img src="/src/assets/gaming.jpg" alt="Gaming area" className="rounded-md border object-cover aspect-video" />
-        <img src="/src/assets/gymn.jpeg" alt="Gym floor" className="rounded-md border object-cover aspect-video" />
+        <img src="/gaming.jpg" alt="Gaming area" className="rounded-md border object-cover aspect-video" />
+        <img src="/gymn.jpeg" alt="Gym floor" className="rounded-md border object-cover aspect-video" />
       </section>
 
       <section>
@@ -80,8 +80,8 @@ export default function Home() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <img src="/src/assets/gaming.jpg" alt="Gaming" className="rounded-md border object-cover aspect-video" />
-            <img src="/src/assets/gymn.jpeg" alt="Gym" className="rounded-md border object-cover aspect-video" />
+            <img src="/gaming.jpg" alt="Gaming" className="rounded-md border object-cover aspect-video" />
+            <img src="/gymn.jpeg" alt="Gym" className="rounded-md border object-cover aspect-video" />
           </div>
         </div>
       </section>

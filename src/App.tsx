@@ -13,7 +13,12 @@ const Settings = lazy(() => import('./pages/Settings'))
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter 
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true
+      }}
+    >
       <Layout>
         <Suspense fallback={<div className="py-10 text-center text-sm text-muted-foreground">Loading…</div>}>
           <Routes>
@@ -34,8 +39,8 @@ export default function App() {
                 <Settings />
               </ProtectedRoute>
             } />
-            <Route path="/sign-in" element={<div className="max-w-md mx-auto"><SignIn routing="path" path="/sign-in" /></div>} />
-            <Route path="/sign-up" element={<div className="max-w-md mx-auto"><SignUp routing="path" path="/sign-up" /></div>} />
+            <Route path="/sign-in" element={<div className="max-w-md mx-auto"><SignIn routing="hash" /></div>} />
+            <Route path="/sign-up" element={<div className="max-w-md mx-auto"><SignUp routing="hash" /></div>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
