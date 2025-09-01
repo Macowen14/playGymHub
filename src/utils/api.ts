@@ -28,23 +28,6 @@ export type Subscription = {
   updatedAt: string;
 }
 
-// Add the missing PaymentResponse type
-export type PaymentResponse = {
-  success: boolean;
-  message: string;
-  data: {
-    subscription: {
-      id: string;
-      category: string;
-      plan: string;
-      amount: number;
-      endDate: string;
-      status: string;
-    };
-    mpesa: unknown;
-  };
-}
-
 // Get API URL with fallback and validation
 export function getApiUrl(): string {
   // Use Vite's import.meta.env instead of process.env for browser environments
